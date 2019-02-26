@@ -1,0 +1,119 @@
+---
+title: "Exploratory Data Analysis Checklist"
+author: "Izolda Fetko"
+date: "2/25/2019"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+1. Formulate your question
+
+2. Read in your data
+
+3. Check the packaging
+
+4. Run str()
+
+5. Look at the top and the bottom of your data
+
+6. Check your "n"s
+
+7. Validate with at least one external data source
+
+8. Try the easy solution first
+
+9.Challenge your solution
+
+10. Follow up
+
+Installing all necessary packages
+
+
+```{r}
+library(dplyr)
+library(htmlwidgets)
+library(tidyverse)
+library(readr)
+library(tidyr)
+library(readr)
+
+```
+
+Read in the data
+
+```{r}
+ozone <- read_csv("C:/Users/Justin/Desktop/USEPAdata 017.csv")
+
+```
+
+```{r}
+names(ozone) <- make.names(names(ozone))
+```
+
+Checking the number of rows and columns
+
+```{r}
+nrow(ozone)
+ncol(ozone)
+```
+
+We can check the structure of the dataset by running the str(ozone) command
+
+```{r}
+str(ozone)
+```
+
+We can look at the top and bottom rows of the dataset to get familiar with it
+
+```{r}
+head(ozone)
+tail(ozone)
+```
+####Select a numeric column and practice mean(), median(), sd(), var(), IQR(), range(), diff(range()) 
+
+For this purpose, I am choosing the observation count column
+
+##### mean
+
+```{r}
+mean(ozone$Observation.Count)
+```
+
+##### standard deviation
+
+```{r}
+sd(ozone$Observation.Count)
+
+```
+
+##### median
+
+```{r}
+median(ozone$Observation.Count)
+```
+
+##### variance
+```{r}
+var(ozone$Observation.Count)
+```
+
+##### inter-quartile range
+```{r}
+IQR(ozone$Observation.Count)
+```
+
+##### range
+
+```{r}
+range(ozone$Observation.Count)
+```
+##### diff range
+
+```{r}
+diff(range(ozone$Observation.Count))
+```
+
+
+
