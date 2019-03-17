@@ -8,4 +8,4 @@ Repository and Owner Information:
   - course: "Applied Data Science - INFO I590-9772"
   - semester: sp19
   - GitHub profile: https://github.com/IzoldaIU
-  - Code portfolio: https://github.com/IzoldaIU/dataanalytics/tree/master/Portfolio
+  - Code portfolio:https://github.com/IzoldaIU/dataanalytics/tree/master/Code%20Portfolio
