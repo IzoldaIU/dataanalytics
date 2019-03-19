@@ -1,0 +1,90 @@
+---
+title: "Data Analysis Examples - Good Diagnostics"
+author: "Izolda Fetko"
+date: "3/19/2019"
+output:
+  html_document:
+    df_print: paged
+---
+
+The following exercise was retrieved from http://daviddalpiaz.github.io/appliedstats/model-diagnostics.html#data-analysis-examples
+
+Note: Was unable to complete Suspect Diagnostics sections due to the devtools package issues.
+
+
+### Install packages we usually use in  exercises
+
+
+```{r echo=FALSE, warning=FALSE, message = FALSE}
+library(dplyr)
+library(htmlwidgets)
+library(tidyverse)
+library(readr)
+library(tidyr)
+
+```
+
+First we need to import the mtcars dataset
+
+```{r}
+mtcars
+```
+
+Now we need to fit the linear regression model
+
+```{r}
+mpg_hp_add = lm(mpg ~ hp + am, data = mtcars)
+
+```
+
+We plot to see the the relationship between the fitted versus residuals.
+```{r}
+plot(fitted(mpg_hp_add), resid(mpg_hp_add), col = "grey", pch = 20,
+     xlab = "Fitted", ylab = "Residual",
+     main = "mtcars: Fitted versus Residuals")
+abline(h = 0, col = "darkorange", lwd = 2)
+```
+```{r}
+qqnorm(resid(mpg_hp_add), col = "darkgrey")
+qqline(resid(mpg_hp_add), col = "dodgerblue", lwd = 2)
+```
+By plotting the qq plot, we see that the fitted vs residual still looks good.
+
+```{r}
+sum(hatvalues(mpg_hp_add) > 2 * mean(hatvalues(mpg_hp_add)))
+```
+This shows us that there are two points of large leverage.
+To check if there is a point with a large residual we do the following:
+```{r}
+cd_mpg_hp_add = cooks.distance(mpg_hp_add)
+sum(cd_mpg_hp_add > 4 / length(cd_mpg_hp_add))
+```
+```{r}
+large_cd_mpg = cd_mpg_hp_add > 4 / length(cd_mpg_hp_add)
+cd_mpg_hp_add[large_cd_mpg]
+```
+These two cars represent two influental points.
+
+Checking the coefficients.
+
+```{r}
+coef(mpg_hp_add)
+
+mpg_hp_add_fix = lm(mpg ~ hp + am,
+                    data = mtcars,
+                    subset = cd_mpg_hp_add <= 4 / length(cd_mpg_hp_add))
+coef(mpg_hp_add_fix)
+```
+
+We can also plot this
+
+```{r}
+par(mfrow = c(2, 2))
+plot(mpg_hp_add)
+```
+
+For the suspect diagnostics, we can analyze the autompg dataset.
+Before we start using the dataset, we need to install appropriate packatged and libraries.
+
+
+
