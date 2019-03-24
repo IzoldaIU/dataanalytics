@@ -1,0 +1,78 @@
+---
+title: "K-means-practice"
+author: Izolda Fetko
+date: 3/24/2019
+output: html_document
+---
+
+The following practive was retrieved from https://bookdown.org/rdpeng/exdata/k-means-clustering.html
+
+First we need to import necessary libraries.
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)  # data manipulation
+library(cluster)    # clustering algorithms
+library(factoextra) # clustering algorithms & visualization
+```
+
+The K-means approach, like many clustering methods, is highly algorithmic (can't be summarized in a formula) and is iterative. 
+The outline of the algorithm is:
+
+- Fix the number of clusters at some integer greater than or equal to 2
+
+- Start with the "centroids" of each cluster; initially you might just pick a random set of points as the centroids
+
+- Assign points to their closest centroid; cluster membership corresponds to the centroid assignment
+
+- Reclaculate centroid positions and repeat.
+
+To illustrate the example we are working with the random dataset.
+
+```{r}
+set.seed(1234)
+x <- rnorm(12, mean = rep(1:3, each = 4), sd = 0.2)
+y <- rnorm(12, mean = rep(c(1, 2, 1), each = 4), sd = 0.2)
+plot(x, y, col = "blue", pch = 19, cex = 2)
+text(x + 0.05, y + 0.05, labels = as.character(1:12))
+
+```
+
+The first thing K-means has to do is assign an initial set of centroids.
+The next stage in the algorithm assigns every point in the dataset to the closest centroid.
+The next stage is the re-calculate the centroids based on the new cluster assignments of the data points. 
+Once the full cycle of the althorithm is completed, re-assign points to their (new) closest cluster centroid.
+We can also update the centroid positions one more time based on the re-assigned points.
+
+### Kmeans() function
+
+The kmeans() function in R implements the K-means algorithm and can be found in the stats package, which comes with R.
+
+Two key parameters thathavet to be specified are x, which is a matrix or data frame of data, and centers which is either an integer indicating the number of clusters or a matrix indicating the locations of the initial cluster centroids. The data should be organized so that each row is an observation and each column is a variable or feature of that observation.
+
+```{r}
+dataFrame <- data.frame(x, y)
+kmeansObj <- kmeans(dataFrame, centers = 3)
+names(kmeansObj)
+
+```
+
+You can see which cluster each data point got assigned to by looking at the cluster element of the list returned by the kmeans() function.
+
+```{r}
+kmeansObj$cluster
+```
+
+Once we have the k-means algorithm solutions, we can build heat maps from them.
+
+```{r}
+set.seed(1234)
+dataMatrix <- as.matrix(dataFrame)[sample(1:12), ]
+kmeansObj <- kmeans(dataMatrix, centers = 3)
+```
+
+```{r}
+par(mfrow = c(1, 2))
+image(t(dataMatrix)[, nrow(dataMatrix):1], yaxt = "n", main = "Original Data")
+image(t(dataMatrix)[, order(kmeansObj$cluster)], yaxt = "n", main = "Clustered Data")
+```
+

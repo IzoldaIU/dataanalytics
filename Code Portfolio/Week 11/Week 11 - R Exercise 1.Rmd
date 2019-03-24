@@ -1,0 +1,75 @@
+---
+title: "K-means-practice"
+author: Izolda Fetko
+date: 3/24/2019
+output: html_document
+---
+
+The following practive was retrieved from Canvas.
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)  # data manipulation
+library(cluster)    # clustering algorithms
+library(factoextra) # clustering algorithms & visualization
+```
+Adapted from UC Business Analytics R Programing Guide
+
+To be able to conduct a K-means clustering analysis, first we need to prepare the dataset - remove the missing values and scale the dataset.
+
+## Data Preparation
+
+Dataset - 1973
+
+```{r USAarests}
+df <- USArrests
+```
+
+Remove missing values
+```{r}
+df <- na.omit(df)
+```
+Scaling
+```{r}
+df <- scale(df)
+
+```
+Now we run the K-Means algorithm
+
+## K-Means
+```{r}
+k2 <- kmeans(df, centers = 2)  # centers  = K
+str(k2)
+```
+Output 
+- cluster: A vector of integers (from 1:k) indicating the cluster to which each point is allocated.
+- centers: A matrix of cluster centers.
+- totss: The total sum of squares.
+- withinss: Vector of within-cluster sum of squares, one component per cluster.
+- tot.withinss: Total within-cluster sum of squares, i.e. sum(withinss).
+- betweenss: The between-cluster sum of squares, i.e. $totss-tot.withinss$.
+- size: The number of points in each cluster.
+
+```{r}
+# function to compute total within-cluster sum of square 
+wss <- function(k) {
+  kmeans(df, k, nstart = 10 )$tot.withinss
+}
+
+# Compute and plot wss for k = 1 to k = 15
+k.values <- 1:15
+
+# extract wss for 2-15 clusters
+wss_values <- map_dbl(k.values, wss)
+
+plot(k.values, wss_values,
+       type="b", pch = 19, frame = FALSE, 
+       xlab="Number of clusters K",
+       ylab="Total within-clusters sum of squares")
+```
+We can also use the Elbom method and nicely visualize the clusters.
+
+### Elbow Method
+```{r}
+final <- kmeans(df, 4, nstart = 25)
+fviz_cluster(final, data = df)
+```
