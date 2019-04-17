@@ -1,5 +1,5 @@
 
-The purpose of this repository is to provide information on the weekly exercises for the Applied Data Science Course.
+The purpose of this repository is to provide information on the weekly exercises for the Applied Data Science Courses as well as to hold project dataset and code.
 
 Repository and Owner Information:
 
